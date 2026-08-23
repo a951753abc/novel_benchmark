@@ -163,7 +163,6 @@ function collectState() {
     },
     ratings,
     instructions: checkedValues("instruction"),
-    instructionConfirmed: document.querySelector("#instructionConfirmed").checked,
     negativeTags: checkedValues("negativeTag"),
     readingIntent: form.querySelector('input[name="readingIntent"]:checked')?.value || "",
     reviewSummary: valueOf("reviewSummary"),
@@ -195,7 +194,6 @@ function applyState(state) {
   });
 
   setCheckedValues("instruction", state?.instructions);
-  document.querySelector("#instructionConfirmed").checked = Boolean(state?.instructionConfirmed);
   setCheckedValues("negativeTag", state?.negativeTags);
   form.querySelectorAll('input[name="readingIntent"]').forEach((input) => {
     input.checked = input.value === (state?.readingIntent || "");
@@ -298,7 +296,7 @@ function overallCalculation(state = collectState()) {
   const review = reviewCalculation(state);
   const consistency = consistencyCalculation(state.consistencyRows);
   const instructionScore = state.instructions.length;
-  const canCalculate = review.scored === RATING_ITEMS.length && consistency.score !== null && state.instructionConfirmed;
+  const canCalculate = review.scored === RATING_ITEMS.length && consistency.score !== null;
   const score = canCalculate ? review.weighted + consistency.score * 0.15 + instructionScore * 0.1 : null;
   return { score, review, consistency, instructionScore };
 }
@@ -344,10 +342,6 @@ function findWarnings(state = collectState()) {
       document.querySelector(`.rating-row[data-rating="${key}"]`)?.classList.add("has-error");
     }
   });
-
-  if (!state.instructionConfirmed) {
-    warnings.push("尚未確認已完成指令遵守核對");
-  }
 
   const incompleteConsistencyRows = [];
   state.consistencyRows.forEach((row, index) => {
@@ -436,7 +430,6 @@ function buildMarkdown() {
     lines.push(`- ${checkMark(state.instructions.includes(input.value))} ${input.value}`);
   });
   lines.push(
-    `- ${checkMark(state.instructionConfirmed)} 已完成逐項核對`,
     "",
     `**指令遵守：${state.instructions.length}／5 分**`,
     "",
@@ -481,7 +474,7 @@ function buildMarkdown() {
     "| --- | ---: | ---: |",
     `| 盲評六項 | 75% | ${result.review.scored === RATING_ITEMS.length ? (result.review.weighted / 0.75).toFixed(2) : "未完成"}／5 |`,
     `| 跨卷事實一致性 | 15% | ${result.consistency.score ?? "未完成"}／5 |`,
-    `| 指令遵守 | 10% | ${state.instructionConfirmed ? result.instructionScore : "未確認"}／5 |`,
+    `| 指令遵守 | 10% | ${result.instructionScore}／5 |`,
     "",
     `## 暫計總分：${result.score === null ? "尚無法計算" : `${result.score.toFixed(2)}／5`}`,
     "",
@@ -575,7 +568,6 @@ function loadExample() {
       chapterQuality: { score: "4", evidence: "鐘錶行場景有清楚目標與阻力，結尾停在新疑點而非總結；中段心理說明稍拖慢節奏。" },
     },
     instructions: ["輸出完整章節", "長度在 2,100–6,500 字內", "無額外分析與說明", "未寫成獨立短篇", "保留未完成的系列主線"],
-    instructionConfirmed: true,
     negativeTags: ["大量解釋角色心理", "角色知識越界"],
     readingIntent: "願意",
     reviewSummary: "本章能用既有懷錶伏筆開出新的調查方向，長線管理與場景推進都穩定。主要問題是助手提前說出窗閂細節：這不只是一句台詞失誤，也會改變讀者取得資訊的順序，需在客觀核對列為 P1。",

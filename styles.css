@@ -503,39 +503,6 @@ input:focus, select:focus, textarea:focus {
 .check-option b { font-size: 0.875rem; font-weight: 600; }
 .tag-option { min-height: 2.75rem; padding: 0.55rem 0.65rem; color: var(--ink-700); font-size: 0.8125rem; }
 
-.confirmation-line {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  margin-top: 1rem;
-  color: var(--ink-700);
-  font-size: 0.8125rem;
-  cursor: pointer;
-}
-.confirmation-line input { position: absolute; opacity: 0; pointer-events: none; }
-.confirmation-line > span {
-  width: 1.2rem;
-  height: 1.2rem;
-  flex: none;
-  display: grid;
-  place-items: center;
-  margin-top: 0.1rem;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
-}
-.confirmation-line > span::after {
-  content: "";
-  width: 0.4rem;
-  height: 0.65rem;
-  border: solid var(--paper-50);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg) translate(-1px, -1px) scale(0);
-}
-.confirmation-line input:checked + span { border-color: var(--green-700); background: var(--green-700); }
-.confirmation-line input:checked + span::after { transform: rotate(45deg) translate(-1px, -1px) scale(1); }
-.confirmation-line input:focus-visible + span { outline: 2px solid var(--vermillion-600); outline-offset: 2px; }
-
 .split-fields { display: grid; gap: 2rem; padding-top: 2.5rem; border-top: 1px solid var(--line); }
 .reading-intent { margin: 0; padding: 0; border: 0; }
 .reading-intent legend { margin-bottom: 0.25rem; font-family: var(--serif); font-size: 1.5rem; font-weight: 700; }
