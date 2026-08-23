@@ -290,6 +290,7 @@ main { display: block; }
 }
 
 .field label span { color: var(--vermillion-700); font-size: 0.75rem; }
+.field--evidence label span { color: var(--ink-500); }
 
 input[type="text"], input[type="date"], select, textarea {
   width: 100%;
@@ -321,23 +322,32 @@ input:focus, select:focus, textarea:focus {
 .rating-row.has-error .score-choice input:checked + span { background: var(--ink-900); }
 
 .legend-strip {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 0;
   margin-bottom: 2rem;
   border-block: 1px solid var(--line);
 }
 
 .legend-strip span {
-  flex: 1 1 9rem;
-  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.2rem 0.75rem;
+  padding: 0.8rem 0.75rem;
   color: var(--ink-700);
-  font-size: 0.75rem;
-  text-align: center;
+  text-align: left;
 }
 
-.legend-strip span + span { border-left: 1px solid var(--line); }
-.legend-strip b { color: var(--vermillion-700); font-size: 1rem; }
+.legend-strip span + span { border-top: 1px solid var(--line); }
+.legend-strip b {
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--vermillion-700);
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+.legend-strip strong { color: var(--ink-900); font-size: 0.8125rem; }
+.legend-strip small { color: var(--ink-500); font-size: 0.75rem; line-height: 1.55; }
 
 .rating-list { border-top: 1px solid var(--ink-900); }
 
@@ -753,6 +763,8 @@ footer p { margin: 0; }
 @media (min-width: 64rem) {
   .masthead__inner, .hero__inner, .section-nav__inner, .document-section, .export-section, footer, .score-dock__inner { width: min(100% - 5rem, var(--max)); }
   .hero__inner { grid-template-columns: minmax(0, 1.5fr) minmax(18rem, 0.65fr); align-items: end; }
+  .legend-strip { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .legend-strip span + span { border-top: 0; border-left: 1px solid var(--line); }
   .rating-row { display: grid; grid-template-columns: minmax(18rem, 0.75fr) minmax(15rem, 0.6fr) minmax(20rem, 1fr); gap: 1.5rem; align-items: start; }
   .rating-row__prompt { margin-bottom: 0; }
   .score-group { margin-bottom: 0; }

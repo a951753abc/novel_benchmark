@@ -288,7 +288,7 @@ function reviewCalculation(state = collectState()) {
       scored += 1;
       weighted += Number(item.score) * (weight / 100);
     }
-    if (item.score && item.evidence) completed += 1;
+    if (item.score) completed += 1;
   });
 
   return { completed, scored, weighted };
@@ -342,10 +342,6 @@ function findWarnings(state = collectState()) {
     if (!item.score) {
       warnings.push(`「${label}」尚未評分`);
       document.querySelector(`.rating-row[data-rating="${key}"]`)?.classList.add("has-error");
-    }
-    if (!item.evidence) {
-      warnings.push(`「${label}」尚未填寫證據`);
-      markField(document.querySelector(`#evidence-${key}`));
     }
   });
 
@@ -494,7 +490,7 @@ function buildMarkdown() {
   );
 
   if (warnings.length) warnings.forEach((warning) => lines.push(`- [ ] ${warning}`));
-  else lines.push("- [x] 必填資訊、各項分數與必要證據均已完成");
+  else lines.push("- [x] 必填資訊與各項分數均已完成（盲評證據為選填）");
 
   lines.push(
     "",
