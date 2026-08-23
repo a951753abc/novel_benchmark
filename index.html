@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="中文長篇小說續寫 Benchmark 的盲評評分與客觀一致性核對工具，可填寫、勾選並匯出 Markdown。">
+  <meta name="theme-color" content="#f1ecdf">
+  <title>盲評評分 × 客觀一致性核對</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要內容</a>
+
+  <header class="masthead">
+    <div class="masthead__inner">
+      <a class="wordmark" href="#top" aria-label="回到頁首">
+        <span class="wordmark__seal" aria-hidden="true">評</span>
+        <span>
+          <b>續寫能力 Benchmark</b>
+          <small>盲評與一致性核對工具</small>
+        </span>
+      </a>
+      <div class="save-state" id="saveState" role="status" aria-live="polite">
+        <span class="save-state__dot" aria-hidden="true"></span>
+        <span>尚未修改</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="kicker">REVIEW WORKBENCH · 01</p>
+        <h1>讓每一個分數，<br><em>都找得到根據。</em></h1>
+        <p>填寫盲評分數與證據，再由系列作者完成客觀核對。資料只保存在目前瀏覽器；完成後可匯出為適合 GitHub 留存的 Markdown。</p>
+      </div>
+      <aside class="method-note" aria-label="使用順序">
+        <p class="method-note__label">建議順序</p>
+        <ol>
+          <li><span>01</span>評審填盲評單</li>
+          <li><span>02</span>作者查狀態表</li>
+          <li><span>03</span>核對客觀一致性</li>
+          <li><span>04</span>匯出 Markdown</li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+
+  <nav class="section-nav" aria-label="表單章節">
+    <div class="section-nav__inner">
+      <a href="#review"><span>01</span>盲評評分單</a>
+      <a href="#consistency"><span>02</span>一致性核對</a>
+      <a href="#rubric"><span>03</span>判定手冊</a>
+      <a href="#example"><span>04</span>完整範例</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <form id="assessmentForm" novalidate>
+      <section class="document-section identity-section" aria-labelledby="identityTitle">
+        <div class="section-marker" aria-hidden="true">檔案</div>
+        <div class="section-body">
+          <div class="section-heading section-heading--compact">
+            <div>
+              <p class="kicker">DOCUMENT IDENTITY</p>
+              <h2 id="identityTitle">本次評稿資料</h2>
+            </div>
+            <p>這些欄位會同時出現在盲評單與一致性核對單。</p>
+          </div>
+
+          <div class="field-grid field-grid--three">
+            <div class="field">
+              <label for="manuscriptCode">稿件代號 <span aria-hidden="true">＊</span></label>
+              <input id="manuscriptCode" name="manuscriptCode" type="text" autocomplete="off" placeholder="例如：MA2-X7" required>
+            </div>
+            <div class="field">
+              <label for="seriesName">系列／作品代稱</label>
+              <input id="seriesName" name="seriesName" type="text" autocomplete="off" placeholder="避免填入可解盲資訊">
+            </div>
+            <div class="field">
+              <label for="genre">作品類型 <span aria-hidden="true">＊</span></label>
+              <select id="genre" name="genre" required>
+                <option value="">請選擇</option>
+                <option value="推理小說">推理小說</option>
+                <option value="輕小說">輕小說</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="reviewer">盲評評審</label>
+              <input id="reviewer" name="reviewer" type="text" autocomplete="name" placeholder="姓名或評審代號">
+            </div>
+            <div class="field">
+              <label for="checker">Checkpoint／核對人</label>
+              <input id="checker" name="checker" type="text" autocomplete="off" placeholder="系列作者或核對人代號">
+            </div>
+            <div class="field">
+              <label for="reviewDate">評審日期</label>
+              <input id="reviewDate" name="reviewDate" type="date">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="document-section" id="review" aria-labelledby="reviewTitle">
+        <div class="section-marker" aria-hidden="true">01</div>
+        <div class="section-body">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">BLIND REVIEW SHEET</p>
+              <h2 id="reviewTitle">盲評評分單</h2>
+            </div>
+            <p>每稿每評審一份。每項選 1–5 分並附簡短證據；「感覺不對」不是可覆核的理由。</p>
+          </div>
+
+          <div class="legend-strip" aria-label="分數說明">
+            <span><b>1</b> 明顯失敗</span>
+            <span><b>2</b> 多處問題</span>
+            <span><b>3</b> 基本合格</span>
+            <span><b>4</b> 穩定良好</span>
+            <span><b>5</b> 出色延續</span>
+          </div>
+
+          <div class="rating-list">
+            <article class="rating-row" data-rating="characters" data-weight="10">
+              <div class="rating-row__prompt">
+                <span class="weight">10%</span>
+                <div><h3>人物與關係延續</h3><p>角色行為、關係張力與成長軌跡是否承接既有文本？</p></div>
+              </div>
+              <fieldset class="score-group"><legend>人物與關係延續分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-characters">證據 <span>必填</span></label><textarea id="evidence-characters" name="evidence-characters" rows="3" placeholder="指出具體場景、台詞或行為；例如：主角仍以迴避回答維持上一章的戒心。"></textarea></div>
+            </article>
+
+            <article class="rating-row" data-rating="plotlines" data-weight="10">
+              <div class="rating-row__prompt">
+                <span class="weight">10%</span>
+                <div><h3>伏筆及劇情線管理</h3><p>既有伏筆有被記住嗎？新推進是否保留長期展開空間？</p></div>
+              </div>
+              <fieldset class="score-group"><legend>伏筆及劇情線管理分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-plotlines">證據 <span>必填</span></label><textarea id="evidence-plotlines" name="evidence-plotlines" rows="3" placeholder="例如：重新帶回懷錶刻字，但只新增可追查方向，沒有提早揭底。"></textarea></div>
+            </article>
+
+            <article class="rating-row" data-rating="voice" data-weight="10">
+              <div class="rating-row__prompt">
+                <span class="weight">10%</span>
+                <div><h3>文風與敘事聲音延續</h3><p>敘事距離、節奏、句法與角色聲線是否像同一系列？</p></div>
+              </div>
+              <fieldset class="score-group"><legend>文風與敘事聲音延續分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-voice">證據 <span>必填</span></label><textarea id="evidence-voice" name="evidence-voice" rows="3" placeholder="引用一個成功或失準之處，不要只寫「不像原作」。"></textarea></div>
+            </article>
+
+            <article class="rating-row" data-rating="contribution" data-weight="5">
+              <div class="rating-row__prompt">
+                <span class="weight">5%</span>
+                <div><h3>新章對長期故事的貢獻</h3><p>本章是否帶來可延續的新局面，而非原地踏步或短篇化收束？</p></div>
+              </div>
+              <fieldset class="score-group"><legend>新章對長期故事的貢獻分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-contribution">證據 <span>必填</span></label><textarea id="evidence-contribution" name="evidence-contribution" rows="3" placeholder="例如：建立新嫌疑鏈，同時讓搭檔的不信任成為後續障礙。"></textarea></div>
+            </article>
+
+            <article class="rating-row" data-rating="genre" data-weight="25">
+              <div class="rating-row__prompt">
+                <span class="weight">25%</span>
+                <div><h3>類型能力</h3><p>依系列選用推理或輕小說的類型要求，檢查核心閱讀快感是否成立。</p></div>
+              </div>
+              <fieldset class="score-group"><legend>類型能力分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-genre">證據 <span>必填</span></label><textarea id="evidence-genre" name="evidence-genre" rows="3" placeholder="推理可談線索公平性與推演；輕小說可談角色化學反應、場面調度與節奏。"></textarea></div>
+            </article>
+
+            <article class="rating-row" data-rating="chapterQuality" data-weight="15">
+              <div class="rating-row__prompt">
+                <span class="weight">15%</span>
+                <div><h3>單章小說品質</h3><p>綜合自然度、節奏、場景、張力與可讀性。</p></div>
+              </div>
+              <fieldset class="score-group"><legend>單章小說品質分數</legend></fieldset>
+              <div class="field field--evidence"><label for="evidence-chapterQuality">證據 <span>必填</span></label><textarea id="evidence-chapterQuality" name="evidence-chapterQuality" rows="3" placeholder="指出最能影響閱讀體驗的一至兩個段落或結構選擇。"></textarea></div>
+            </article>
+          </div>
+
+          <div class="rule-callout">
+            <span class="rule-callout__mark" aria-hidden="true">15</span>
+            <p><b>跨卷事實一致性 15%</b> 不在此處主觀評定；請由系列作者依下方核對單客觀換算。</p>
+          </div>
+
+          <div class="check-section">
+            <div class="subsection-heading">
+              <div><p class="kicker">INSTRUCTION COMPLIANCE · 10%</p><h3>指令遵守</h3></div>
+              <p>逐項勾核。工具預設以「每完成一項＝1 分」換算成 0–5 分；匯出時會明列此換算方式。</p>
+            </div>
+            <div class="check-grid" id="instructionChecks">
+              <label class="check-option"><input type="checkbox" name="instruction" value="輸出完整章節"><span aria-hidden="true"></span><b>輸出完整章節</b></label>
+              <label class="check-option"><input type="checkbox" name="instruction" value="長度在 2,100–6,500 字內"><span aria-hidden="true"></span><b>長度在 2,100–6,500 字內</b></label>
+              <label class="check-option"><input type="checkbox" name="instruction" value="無額外分析與說明"><span aria-hidden="true"></span><b>無額外分析與說明</b></label>
+              <label class="check-option"><input type="checkbox" name="instruction" value="未寫成獨立短篇"><span aria-hidden="true"></span><b>未寫成獨立短篇</b></label>
+              <label class="check-option"><input type="checkbox" name="instruction" value="保留未完成的系列主線"><span aria-hidden="true"></span><b>保留未完成的系列主線</b></label>
+            </div>
+            <label class="confirmation-line"><input id="instructionConfirmed" name="instructionConfirmed" type="checkbox"><span aria-hidden="true"></span><b>我已逐項核對；未勾選的項目代表未遵守，而不是尚未檢查。</b></label>
+          </div>
+
+          <div class="check-section check-section--quiet">
+            <div class="subsection-heading">
+              <div><p class="kicker">ISSUE TAGS</p><h3>負面問題標籤</h3></div>
+              <p>可複選。標籤用來跨稿彙整常見失誤，不直接扣分。</p>
+            </div>
+            <div class="tag-grid" id="negativeTags"></div>
+          </div>
+
+          <div class="split-fields">
+            <fieldset class="reading-intent">
+              <legend><span class="kicker">READING INTENT</span>續讀意願</legend>
+              <p>獨立記錄，不併入加權。</p>
+              <label><input type="radio" name="readingIntent" value="願意"><span>願意</span></label>
+              <label><input type="radio" name="readingIntent" value="視後續發展而定"><span>視後續發展而定</span></label>
+              <label><input type="radio" name="readingIntent" value="不願意"><span>不願意</span></label>
+            </fieldset>
+            <div class="field field--large">
+              <label for="reviewSummary">整體評語</label>
+              <textarea id="reviewSummary" name="reviewSummary" rows="6" placeholder="先寫最重要的判斷，再補充一個優點與一個主要風險。"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="document-section" id="consistency" aria-labelledby="consistencyTitle">
+        <div class="section-marker" aria-hidden="true">02</div>
+        <div class="section-body">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">CONSISTENCY CHECK</p>
+              <h2 id="consistencyTitle">客觀一致性核對單</h2>
+            </div>
+            <p>每稿一份，由該系列作者逐項對照正文與狀態表。得分衡量「接得好不好」，嚴重度衡量「錯誤殺傷力」。</p>
+          </div>
+
+          <div class="axis-note">
+            <div><span class="axis-note__number">2 / 1 / 0</span><p><b>一致性得分</b><br>正確延續／輕微遺漏／明顯矛盾</p></div>
+            <div><span class="axis-note__number">P0—P3</span><p><b>錯誤嚴重度</b><br>系列核心／長期線／局部／措辭細節</p></div>
+          </div>
+
+          <div class="consistency-toolbar">
+            <div>
+              <p><b>逐項核對</b></p>
+              <p class="muted">空白列不納入計算；可依狀態表增減。</p>
+            </div>
+            <button class="button button--secondary" id="addConsistencyRow" type="button"><span aria-hidden="true">＋</span>新增項目</button>
+          </div>
+
+          <datalist id="consistencyItems">
+            <option value="人物所在地"></option>
+            <option value="人物身體狀態"></option>
+            <option value="人物心理狀態"></option>
+            <option value="各角色知道的資訊"></option>
+            <option value="人物關係與稱呼"></option>
+            <option value="進行中的劇情線"></option>
+            <option value="未回收伏筆"></option>
+            <option value="時間順序"></option>
+            <option value="場景空間關係"></option>
+            <option value="持有物與道具"></option>
+            <option value="專有名詞"></option>
+            <option value="世界規則"></option>
+          </datalist>
+          <div class="consistency-list" id="consistencyRows" aria-live="polite"></div>
+
+          <button class="button button--dashed" id="addConsistencyRowBottom" type="button"><span aria-hidden="true">＋</span>再新增一個核對項目</button>
+
+          <div class="conversion-panel" aria-live="polite">
+            <div class="conversion-panel__result">
+              <p class="kicker">§17.1 CONVERSION</p>
+              <p class="conversion-panel__score"><span id="consistencyScore">—</span><small>／5 分</small></p>
+              <p id="consistencyReason">填入至少一個核對項目後自動換算。</p>
+            </div>
+            <ol class="conversion-panel__rules">
+              <li><b>任何 P0</b><span>→ 1 分</span></li>
+              <li><b>1 個 P1</b><span>→ 2 分</span></li>
+              <li><b>2 個以上 P1</b><span>→ 1 分</span></li>
+              <li><b>只有 P2／P3</b><span>依得分率換算 2–5 分</span></li>
+            </ol>
+          </div>
+
+          <div class="field field--large final-note">
+            <label for="consistencyNote">核對補充</label>
+            <textarea id="consistencyNote" name="consistencyNote" rows="4" placeholder="記錄爭議裁決、同一錯誤影響多項的處理方式，或需要在下站增修的判例。"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="document-section" id="rubric" aria-labelledby="rubricTitle">
+        <div class="section-marker" aria-hidden="true">03</div>
+        <div class="section-body">
+          <div class="section-heading">
+            <div><p class="kicker">CONSISTENCY RUBRIC</p><h2 id="rubricTitle">判定手冊</h2></div>
+            <p>開填前先讀。判例可在校準與站間檢討增修，但各站評分期間應鎖定。</p>
+          </div>
+
+          <h3 class="rubric-heading">一致性得分：項目接得好不好？</h3>
+          <div class="rubric-table rubric-table--score" role="table" aria-label="一致性得分判定表">
+            <div class="rubric-row rubric-row--head" role="row"><span role="columnheader">得分</span><span role="columnheader">定義與判定原則</span><span role="columnheader">範例</span></div>
+            <div class="rubric-row" role="row"><span class="rubric-code" role="cell">2</span><span role="cell"><b>正確延續，或新發展與既有正文、狀態表相容。</b><br>出乎作者預期但相容仍給 2；拿不準 2 還是 1，疑點利益歸模型。</span><span role="cell">正文只寫偵探「離開旅館」，新章寫他回事務所整理筆記；找不到對撞原句，屬合理新發展。</span></div>
+            <div class="rubric-row" role="row"><span class="rubric-code" role="cell">1</span><span role="cell"><b>沒有直接說錯，但遺漏或含糊帶過該承接的資訊。</b><br>或錯誤輕到後續一句話就能圓回。</span><span role="cell">狀態表記「女主角右手骨折未癒」，整章沒提傷勢，也沒讓傷勢影響任何動作。</span></div>
+            <div class="rubric-row" role="row"><span class="rubric-code" role="cell">0</span><span role="cell"><b>與正文或狀態表白紙黑字對撞，或把已發生的事改寫。</b><br>給 0 前必須找出原句；找不到就退回 1。</span><span role="cell">狀態表記「助手不知道死者與委託人的關係」，新章卻讓助手親口說出這層關係。</span></div>
+          </div>
+
+          <h3 class="rubric-heading">嚴重度：錯誤對系列的殺傷力？</h3>
+          <div class="severity-grid">
+            <article><span class="rubric-code">P0</span><h4>系列核心被破壞</h4><p class="question">這個錯誤成立，這部系列還成立嗎？</p><p><b>推理：</b>把真犯人寫成另一人，或改寫關鍵證據。</p><p><b>輕小說：</b>設定魔力不能復活死者，卻讓主角復活隊友。</p></article>
+            <article><span class="rubric-code">P1</span><h4>一條長期線被殺死</h4><p class="question">後續章節要大改才圓得回來嗎？</p><p><b>推理：</b>未發現的關鍵線索被提前解讀，資訊節奏被毀。</p><p><b>輕小說：</b>兩人尚未告白，新章卻直接寫成交往中。</p></article>
+            <article><span class="rubric-code">P2</span><h4>一章一景內的局部錯誤</h4><p class="question">改幾句話就能修好嗎？</p><p><b>推理：</b>發現時間差兩小時，但未動搖不在場證明。</p><p><b>輕小說：</b>已交還的鑰匙又出現在角色口袋。</p></article>
+            <article><span class="rubric-code">P3</span><h4>措辭與細節級</h4><p class="question">不對照原文，讀者會注意嗎？</p><p><b>推理：</b>「聖堂」偶爾寫成「大聖堂」。</p><p><b>輕小說：</b>角色口癖有兩句沒有帶到。</p></article>
+          </div>
+
+          <div class="principles">
+            <h3>四條通用判定原則</h3>
+            <ol>
+              <li><span>一</span><div><b>相容不等於錯誤</b><p>只對照狀態表與正文，不對照作者原本預想。找不到對撞原句就是 2 分。</p></div></li>
+              <li><span>二</span><div><b>同一錯誤只計一次嚴重度</b><p>同一錯誤可讓多個項目各自得 0，但 P0／P1 只記在最相關的一項，其他列嚴重度留空。</p></div></li>
+              <li><span>三</span><div><b>嚴重度跟著後果走</b><p>一處稱呼筆誤可能是 P3；整章改口、暗示關係被重置，就可能是 P1。</p></div></li>
+              <li><span>四</span><div><b>證據欄是硬要求</b><p>給 0 或標 P0／P1，必須引出對撞的正文或狀態表原句；引不出來就降級。</p></div></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="document-section example-section" id="example" aria-labelledby="exampleTitle">
+        <div class="section-marker" aria-hidden="true">04</div>
+        <div class="section-body">
+          <div class="section-heading">
+            <div><p class="kicker">WORKED EXAMPLE</p><h2 id="exampleTitle">完整填寫範例</h2></div>
+            <p>這份虛構範例示範「可核對的證據」與兩軸判定。你可以載入表單實際查看匯出結果。</p>
+          </div>
+
+          <div class="example-story">
+            <div class="example-story__setup">
+              <p class="kicker">前情與狀態表</p>
+              <h3>《霧港懷錶案》／稿件 MA2-X7</h3>
+              <ul>
+                <li>偵探黎川在上一章只告訴助手「死者曾造訪旅館」，尚未透露密室窗閂的刮痕。</li>
+                <li>助手林森仍稱女主角為「小雪」，兩人尚未熟到使用「雪姊」。</li>
+                <li>懷錶刻字是未回收伏筆；現階段只允許發現更多來源線索，不能直接揭露真凶。</li>
+              </ul>
+            </div>
+            <div class="example-story__decision">
+              <p class="kicker">新章發生的事</p>
+              <p>新章成功讓懷錶刻字指向另一間鐘錶行，保留後續調查空間；但助手在黎川說明前，直接指出窗閂是從室內破壞，形成角色知識越界。</p>
+              <div class="decision-line"><span>盲評證據</span><b>具體指出成功推進與資訊越界，分開記錄。</b></div>
+              <div class="decision-line"><span>一致性得分</span><b>0：有原文／狀態表可直接對撞。</b></div>
+              <div class="decision-line"><span>嚴重度</span><b>P1：提前解讀關鍵線索，破壞資訊節奏。</b></div>
+            </div>
+          </div>
+          <button class="button button--primary" id="loadExample" type="button">把完整範例載入表單</button>
+          <p class="button-note">載入前的內容仍可在提示列按「復原」取回。</p>
+        </div>
+      </section>
+    </form>
+
+    <section class="export-section" id="export" aria-labelledby="exportTitle">
+      <div>
+        <p class="kicker">EXPORT</p>
+        <h2 id="exportTitle">完成後，帶走一份可追溯紀錄。</h2>
+        <p>匯出的 Markdown 包含所有分數、證據、勾選、換算理由與缺漏提醒。適合放進 GitHub、Obsidian 或團隊文件。</p>
+      </div>
+      <div class="export-actions">
+        <button class="button button--primary" id="downloadMarkdown" type="button">下載 Markdown</button>
+        <button class="button button--secondary" id="copyMarkdown" type="button">複製 Markdown</button>
+        <button class="button button--text" id="printForm" type="button">列印／存成 PDF</button>
+      </div>
+    </section>
+  </main>
+
+  <aside class="score-dock" aria-label="即時計分摘要">
+    <div class="score-dock__inner">
+      <div class="score-dock__metric">
+        <span>盲評完成</span>
+        <b id="reviewProgress">0 / 6</b>
+      </div>
+      <div class="score-dock__metric">
+        <span>客觀一致性</span>
+        <b id="dockConsistency">— / 5</b>
+      </div>
+      <div class="score-dock__metric score-dock__metric--primary">
+        <span>暫計總分</span>
+        <b id="overallScore">— / 5</b>
+      </div>
+      <div class="score-dock__actions">
+        <button class="button button--primary" id="dockDownload" type="button">匯出 .md</button>
+        <button class="button button--text button--danger" id="clearForm" type="button">清空</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toastMessage"></span>
+    <button id="toastAction" type="button" hidden>復原</button>
+  </div>
+
+  <footer>
+    <p>中文長篇小說續寫能力 Benchmark · 評審工具</p>
+    <p>本頁不會將資料傳送到伺服器；瀏覽器自動保存僅限目前裝置。</p>
+  </footer>
+</body>
+</html>
