@@ -157,10 +157,8 @@ function collectState() {
     version: 1,
     metadata: {
       manuscriptCode: valueOf("manuscriptCode"),
-      seriesName: valueOf("seriesName"),
       genre: valueOf("genre"),
       reviewer: valueOf("reviewer"),
-      checker: valueOf("checker"),
       reviewDate: valueOf("reviewDate"),
     },
     ratings,
@@ -184,7 +182,7 @@ function setCheckedValues(name, values = []) {
 
 function applyState(state) {
   const metadata = state?.metadata || {};
-  ["manuscriptCode", "seriesName", "genre", "reviewer", "checker", "reviewDate"].forEach((field) => {
+  ["manuscriptCode", "genre", "reviewer", "reviewDate"].forEach((field) => {
     const element = document.querySelector(`#${field}`);
     element.value = metadata[field] || (field === "reviewDate" ? todayString() : "");
   });
@@ -243,11 +241,17 @@ function scheduleSave() {
 }
 
 function consistencyCalculation(rows = collectConsistencyRows()) {
-  const completed = rows.filter((row) => row.item && row.score !== "");
-  if (!completed.length) {
-    return { score: null, reason: "填入至少一個核對項目後自動換算。", rate: null, completed: 0, p0: 0, p1: 0 };
+  const active = rows.filter((row) => row.item || row.score !== "" || row.severity || row.evidence);
+  if (!active.length) {
+    return { score: 5, reason: "核對單未記錄任何問題，依規則視為沒有一致性問題，換算為 5 分。", rate: 100, completed: 0, incomplete: 0, p0: 0, p1: 0 };
   }
 
+  const incomplete = active.filter((row) => !row.item || row.score === "" || !row.evidence);
+  if (incomplete.length) {
+    return { score: null, reason: `尚有 ${incomplete.length} 列已開始填寫但資料不完整；填妥項目、得分與證據後才可換算。`, rate: null, completed: active.length - incomplete.length, incomplete: incomplete.length, p0: 0, p1: 0 };
+  }
+
+  const completed = active;
   const p0 = completed.filter((row) => row.severity === "P0").length;
   const p1 = completed.filter((row) => row.severity === "P1").length;
   const earned = completed.reduce((sum, row) => sum + Number(row.score), 0);
@@ -267,6 +271,7 @@ function consistencyCalculation(rows = collectConsistencyRows()) {
     reason: `無 P0／P1；${completed.length} 項得分率 ${rate.toFixed(1)}%，換算為 ${score} 分。`,
     rate,
     completed: completed.length,
+    incomplete: 0,
     p0,
     p1,
   };
@@ -323,7 +328,6 @@ function findWarnings(state = collectState()) {
     ["manuscriptCode", "尚未填寫稿件代號"],
     ["genre", "尚未選擇作品類型"],
     ["reviewer", "尚未填寫盲評評審"],
-    ["checker", "尚未填寫一致性核對人"],
   ];
 
   requiredMetadata.forEach(([id, message]) => {
@@ -349,26 +353,29 @@ function findWarnings(state = collectState()) {
     warnings.push("尚未確認已完成指令遵守核對");
   }
 
+  const incompleteConsistencyRows = [];
   state.consistencyRows.forEach((row, index) => {
     const hasAny = row.item || row.score !== "" || row.severity || row.evidence;
     if (!hasAny) return;
     const element = consistencyRows.querySelectorAll(".consistency-row")[index];
+    let incomplete = false;
     if (!row.item) {
-      warnings.push(`一致性核對第 ${index + 1} 列缺少項目名稱`);
+      incomplete = true;
       markField(element?.querySelector('[data-field="item"]'));
     }
     if (row.score === "") {
-      warnings.push(`一致性核對第 ${index + 1} 列尚未判定得分`);
+      incomplete = true;
       markField(element?.querySelector('[data-field="score"]'));
     }
-    if ((row.score === "0" || row.severity === "P0" || row.severity === "P1") && !row.evidence) {
-      warnings.push(`一致性核對第 ${index + 1} 列需附對撞證據`);
+    if (!row.evidence) {
+      incomplete = true;
       markField(element?.querySelector('[data-field="evidence"]'));
     }
+    if (incomplete) incompleteConsistencyRows.push(index + 1);
   });
 
-  if (!state.consistencyRows.some((row) => row.item && row.score !== "")) {
-    warnings.push("尚未完成任何客觀一致性核對項目");
+  if (incompleteConsistencyRows.length) {
+    warnings.push(`客觀一致性核對第 ${incompleteConsistencyRows.join("、")} 列尚未完整填寫`);
   }
   return warnings;
 }
@@ -403,10 +410,8 @@ function buildMarkdown() {
     "| 欄位 | 內容 |",
     "| --- | --- |",
     `| 稿件代號 | ${mdCell(state.metadata.manuscriptCode)} |`,
-    `| 系列／作品代稱 | ${mdCell(state.metadata.seriesName)} |`,
     `| 作品類型 | ${mdCell(state.metadata.genre)} |`,
     `| 盲評評審 | ${mdCell(state.metadata.reviewer)} |`,
-    `| Checkpoint／核對人 | ${mdCell(state.metadata.checker)} |`,
     `| 評審日期 | ${mdCell(state.metadata.reviewDate)} |`,
     "",
     "## 一、盲評評分單",
@@ -561,10 +566,8 @@ function loadExample() {
     version: 1,
     metadata: {
       manuscriptCode: "MA2-X7",
-      seriesName: "霧港懷錶案",
       genre: "推理小說",
       reviewer: "R03",
-      checker: "作者-A",
       reviewDate: todayString(),
     },
     ratings: {

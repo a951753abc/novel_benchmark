@@ -36,7 +36,6 @@
     <div class="hero__inner">
       <div class="hero__copy">
         <p class="kicker">REVIEW WORKBENCH · 01</p>
-        <h1>讓每一個分數，<br><em>都找得到根據。</em></h1>
         <p>填寫盲評分數與證據，再由系列作者完成客觀核對。資料只保存在目前瀏覽器；完成後可匯出為適合 GitHub 留存的 Markdown。</p>
       </div>
       <aside class="method-note" aria-label="使用順序">
@@ -73,14 +72,10 @@
             <p>這些欄位會同時出現在盲評單與一致性核對單。</p>
           </div>
 
-          <div class="field-grid field-grid--three">
+          <div class="field-grid field-grid--two">
             <div class="field">
               <label for="manuscriptCode">稿件代號 <span aria-hidden="true">＊</span></label>
               <input id="manuscriptCode" name="manuscriptCode" type="text" autocomplete="off" placeholder="例如：MA2-X7" required>
-            </div>
-            <div class="field">
-              <label for="seriesName">系列／作品代稱</label>
-              <input id="seriesName" name="seriesName" type="text" autocomplete="off" placeholder="避免填入可解盲資訊">
             </div>
             <div class="field">
               <label for="genre">作品類型 <span aria-hidden="true">＊</span></label>
@@ -94,10 +89,6 @@
             <div class="field">
               <label for="reviewer">盲評評審</label>
               <input id="reviewer" name="reviewer" type="text" autocomplete="name" placeholder="姓名或評審代號">
-            </div>
-            <div class="field">
-              <label for="checker">Checkpoint／核對人</label>
-              <input id="checker" name="checker" type="text" autocomplete="off" placeholder="系列作者或核對人代號">
             </div>
             <div class="field">
               <label for="reviewDate">評審日期</label>
@@ -245,7 +236,7 @@
           <div class="consistency-toolbar">
             <div>
               <p><b>逐項核對</b></p>
-              <p class="muted">空白列不納入計算；可依狀態表增減。</p>
+              <p class="muted">完全空白視為沒有一致性問題；若開始填寫某列，須填妥項目、得分與證據才會換算。</p>
             </div>
             <button class="button button--secondary" id="addConsistencyRow" type="button"><span aria-hidden="true">＋</span>新增項目</button>
           </div>
