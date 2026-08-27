@@ -618,19 +618,6 @@ input:focus, select:focus, textarea:focus {
 .principles b { font-family: var(--serif); font-size: 1.05rem; }
 .principles p { margin: 0.35rem 0 0; color: var(--ink-700); font-size: 0.875rem; }
 
-.example-story { display: grid; margin-bottom: 1.5rem; border: 1px solid var(--ink-900); }
-.example-story > div { padding: 1.5rem; }
-.example-story__setup { background: var(--surface-muted); }
-.example-story__setup h3 { margin: 0; font-family: var(--serif); font-size: 1.4rem; }
-.example-story ul { margin: 1rem 0 0; padding-left: 1.25rem; }
-.example-story li { margin-top: 0.5rem; color: var(--ink-700); font-size: 0.875rem; }
-.example-story__decision { border-top: 1px solid var(--ink-900); background: var(--surface); }
-.example-story__decision > p:not(.kicker) { margin: 0 0 1.5rem; color: var(--ink-700); }
-.decision-line { display: grid; gap: 0.25rem; padding: 0.75rem 0; border-top: 1px solid var(--line); }
-.decision-line span { color: var(--vermillion-700); font-size: 0.75rem; font-weight: 700; }
-.decision-line b { font-size: 0.875rem; }
-.button-note { display: inline; margin-left: 0.65rem; color: var(--ink-500); font-size: 0.75rem; }
-
 .export-section {
   display: grid;
   gap: 2rem;
@@ -717,8 +704,6 @@ footer p { margin: 0; }
   .severity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .severity-grid article { padding: 1.5rem; border-right: 1px solid var(--line); }
   .severity-grid article:nth-child(even) { border-right: 0; }
-  .example-story { grid-template-columns: 1fr 1fr; }
-  .example-story__decision { border-top: 0; border-left: 1px solid var(--ink-900); }
   .score-dock__inner { grid-template-columns: 9rem 9rem 10rem 1fr; }
   .score-dock__metric { padding: 0.35rem 1rem; text-align: left; }
   .score-dock__metric span { font-size: 0.6875rem; }
@@ -762,7 +747,7 @@ footer p { margin: 0; }
     --surface: oklch(99% 0.004 82);
   }
   body { padding: 0; background: var(--surface); font-size: 9pt; }
-  .masthead, .hero, .section-nav, .score-dock, .toast, .export-section, footer, .button, .button-note { display: none !important; }
+  .masthead, .hero, .section-nav, .score-dock, .toast, .export-section, footer, .button { display: none !important; }
   .document-section { width: 100%; grid-template-columns: 2rem 1fr; padding-block: 1.5rem; break-inside: avoid; }
   .identity-section { padding-top: 0; }
   .section-heading { margin-bottom: 1.25rem; }

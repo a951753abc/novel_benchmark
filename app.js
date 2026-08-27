@@ -549,42 +549,6 @@ function showToast(message, allowUndo = false) {
   }, allowUndo ? 10000 : 4500);
 }
 
-function loadExample() {
-  undoState = collectState();
-  const sample = {
-    version: 1,
-    metadata: {
-      manuscriptCode: "MA2-X7",
-      genre: "推理小說",
-      reviewer: "R03",
-      reviewDate: todayString(),
-    },
-    ratings: {
-      characters: { score: "4", evidence: "黎川仍以短句迴避助手追問，延續上一章的不信任；但助手偶爾顯得過度主動，關係張力略被削弱。" },
-      plotlines: { score: "4", evidence: "懷錶刻字被帶回，並指向另一間鐘錶行；新增可追查方向但沒有直接揭露真凶，主線仍保有空間。" },
-      voice: { score: "3", evidence: "前半維持原作冷靜、節制的第三人稱；後半連續三段直接解釋黎川心理，比既有章節更外顯。" },
-      contribution: { score: "4", evidence: "新增鐘錶行線索，也讓黎川必須處理助手擅自行動的後果，案件線與關係線都能繼續推進。" },
-      genre: { score: "4", evidence: "新線索可由既有懷錶伏筆推得，沒有憑空落答案；然而助手提前知道窗閂細節，削弱了資訊公平性。" },
-      chapterQuality: { score: "4", evidence: "鐘錶行場景有清楚目標與阻力，結尾停在新疑點而非總結；中段心理說明稍拖慢節奏。" },
-    },
-    instructions: ["輸出完整章節", "長度在 2,100–6,500 字內", "無額外分析與說明", "未寫成獨立短篇", "保留未完成的系列主線"],
-    negativeTags: ["大量解釋角色心理", "角色知識越界"],
-    readingIntent: "願意",
-    reviewSummary: "本章能用既有懷錶伏筆開出新的調查方向，長線管理與場景推進都穩定。主要問題是助手提前說出窗閂細節：這不只是一句台詞失誤，也會改變讀者取得資訊的順序，需在客觀核對列為 P1。",
-    consistencyRows: [
-      { item: "各角色知道的資訊", score: "0", severity: "P1", evidence: "狀態表：「林森只知道死者曾造訪旅館，尚不知道窗閂刮痕。」新章第 34 段中，林森在黎川說明前直接說「窗閂是從室內割斷的」。" },
-      { item: "人物關係與稱呼", score: "1", severity: "P3", evidence: "林森有一處把「小雪」稱為「雪姊」，其餘 11 處仍沿用「小雪」；一句即可修正。" },
-      { item: "未回收伏筆", score: "2", severity: "", evidence: "懷錶刻字仍未揭底，只新增鐘錶行來源，與未回收伏筆清單相容。" },
-      { item: "人物所在地", score: "2", severity: "", evidence: "黎川與林森自旅館離開後前往港區鐘錶行，移動時間與上一章結尾相容。" },
-    ],
-    consistencyNote: "窗閂資訊越界同時影響『各角色知道的資訊』與『案件線索節奏』，但依同一錯誤只計一次嚴重度原則，只在前者記 1 個 P1。",
-  };
-  applyState(sample);
-  persistState();
-  showToast("已載入虛構範例。", true);
-  document.querySelector("#review").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
 function clearForm() {
   undoState = collectState();
   form.reset();
@@ -656,7 +620,6 @@ function initialize() {
   document.querySelector("#copyMarkdown").addEventListener("click", copyMarkdown);
   document.querySelector("#printForm").addEventListener("click", () => window.print());
   document.querySelector("#clearForm").addEventListener("click", clearForm);
-  document.querySelector("#loadExample").addEventListener("click", loadExample);
   toastAction.addEventListener("click", undoLastReplace);
 }
 
